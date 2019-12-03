@@ -36,6 +36,9 @@ library IEEE;
 
 package std_logic_expert is
 
+    function to_std_logic(i : in bit) return std_logic;
+	function to_std_logic(i : in integer) return std_logic;
+
 	function to_integer         ( input : std_logic_vector    ) return integer;
 	function to_std_logic_vector( input : integer; size : integer) return std_logic_vector;
 
@@ -44,7 +47,6 @@ package std_logic_expert is
 	function "+" (l:std_logic_vector; r: std_logic_vector) return std_logic_vector;
 	function "+" (l:std_logic_vector; r: integer         ) return std_logic_vector;
 	function "+" (l:integer         ; r: std_logic_vector) return integer;
-	function "+" (l:gray            ; r: gray            ) return gray;
 
 	function "-" (l:std_logic_vector; r: unsigned        ) return std_logic_vector;
 	function "-" (l:unsigned;         r: std_logic_vector) return unsigned;
@@ -106,11 +108,9 @@ package std_logic_expert is
 	function "<=" (l:std_logic_vector; r: unsigned)         return boolean;
 	function "<=" (l:unsigned;         r: std_logic_vector) return boolean;
 
-	--INTERNAL FUNCTIONS. NOT INTENDED TO BE USED DIRECTLY
+	function "NOT" (i : integer) return integer;
 
-	function temp_gray_f000 ( input : std_logic_vector	      ) return  std_logic_vector;
-	function temp_gray_f001 ( input : std_logic_vector	      ) return  gray;
-	function temp_gray_f002 ( input : gray            	      ) return  std_logic_vector;
+	--INTERNAL FUNCTIONS. NOT INTENDED TO BE USED DIRECTLY
 
 end std_logic_expert;
 
@@ -118,6 +118,28 @@ end std_logic_expert;
 package body std_logic_expert is
 
 	----------------------------------------------------------------------------------------------
+  --TO STD_LOGIC
+  function to_std_logic(i : in bit) return std_logic is
+    variable tmp : std_logic;
+  begin
+	  if i = '0' then
+		tmp := '0';
+	  end if;
+	  tmp := '1';
+
+	  return tmp;
+  end function;
+  function to_std_logic(i : in integer) return std_logic is
+    variable tmp : std_logic;
+  begin
+	  if i = 0 then
+		tmp := '0';
+	  end if;
+	  tmp := '1';
+
+	  return tmp;
+  end function;
+
   --TO INTEGER
   function to_integer( input : std_logic_vector) return integer is
     variable tmp : integer;
@@ -142,15 +164,6 @@ package body std_logic_expert is
 			severity failure;
 	--contrato para o input não ser maior que 2**size-1
     tmp := std_logic_vector(to_unsigned(input,size));
-		return tmp;
-  end to_std_logic_vector;
-
-	function to_std_logic_vector( input : gray) return std_logic_vector is
-    variable tmp : std_logic_vector(input'range);
-  begin
-		for j in input'range loop
-			tmp(j) := input(j);
-		end loop;
 		return tmp;
   end to_std_logic_vector;
 
@@ -677,5 +690,16 @@ begin
 	end if;
 	return tmp;
 end "<=";
+
+function "NOT" (i : integer) return integer is
+	variable tmp : integer;
+begin
+	tmp := 0;
+	if i = 0 then
+		tmp := 1;
+	end if;
+	
+	return tmp;
+end "NOT";
 
 end std_logic_expert;
