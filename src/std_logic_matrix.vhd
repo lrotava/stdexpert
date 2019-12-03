@@ -2,7 +2,7 @@ library IEEE;
 	use IEEE.std_logic_1164.all;
 	use IEEE.numeric_std.all;
 
-package std_logic_matrix is
+package std_logic_matrix_pkg is
 
     type std_logic_matrix is array (natural range <>, natural range <>) of std_logic;
 
@@ -37,10 +37,10 @@ package std_logic_matrix is
     
 	-- function "<="   (l:std_logic_matrix; r: std_logic_matrix) return boolean;
 
-end std_logic_matrix;
+end std_logic_matrix_pkg;
 
 --a arquitetura
-package body std_logic_matrix is
+package body std_logic_matrix_pkg is
 
     procedure slm_row_from_slv(signal slm : out std_logic_matrix; constant row : natural; signal slv : in std_logic_vector) is
     begin
@@ -116,4 +116,4 @@ package body std_logic_matrix is
 	-- 	return tmp;
 	-- end "<=";
 
-end std_logic_matrix;
+end std_logic_matrix_pkg;

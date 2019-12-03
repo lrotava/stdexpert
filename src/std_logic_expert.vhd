@@ -36,8 +36,8 @@ library IEEE;
 
 package std_logic_expert is
 
-    function to_std_logic(i : in bit) return std_logic;
-	function to_std_logic(i : in integer) return std_logic;
+    function to_std_logic(i : bit) return std_logic;
+	function to_std_logic(i : integer) return std_logic;
 
 	function to_integer         ( input : std_logic_vector    ) return integer;
 	function to_std_logic_vector( input : integer; size : integer) return std_logic_vector;
@@ -119,7 +119,7 @@ package body std_logic_expert is
 
 	----------------------------------------------------------------------------------------------
   --TO STD_LOGIC
-  function to_std_logic(i : in bit) return std_logic is
+  function to_std_logic(i : bit) return std_logic is
     variable tmp : std_logic;
   begin
 	  if i = '0' then
@@ -129,7 +129,7 @@ package body std_logic_expert is
 
 	  return tmp;
   end function;
-  function to_std_logic(i : in integer) return std_logic is
+  function to_std_logic(i : integer) return std_logic is
     variable tmp : std_logic;
   begin
 	  if i = 0 then
@@ -153,10 +153,10 @@ package body std_logic_expert is
   function to_std_logic_vector( input : integer; size : integer) return std_logic_vector is
     variable tmp : std_logic_vector(size-1 downto 0);
   begin
-		assert size < 1
+		assert size >= 1
 			report "Vector size on conversion must be greater than 0."
 			severity failure;
-		assert size = 1
+		assert size > 1
 			report "Vector size on conversion is 1."
 			severity warning;
 		assert input >= 0
