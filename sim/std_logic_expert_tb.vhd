@@ -60,6 +60,9 @@ begin
 					check_true( to_unsigned(5,8) = tmp_svl1, result("comparator unsigned/std_logic_vector."));
 					check_false(to_unsigned(6,8) = tmp_svl1, result("comparator unsigned/std_logic_vector."));
 
+					check_true( to_std_logic_vector(5,8) = tmp_svl1, result("comparator std_logic_vector/std_logic_vector."));
+					check_false(to_std_logic_vector(6,8) = tmp_svl1, result("comparator std_logic_vector/std_logic_vector."));
+
 				elsif run("Testing '>' comparator for std_logic_vector") then
 					check_true( tmp_svl1 > 4, result("comparator std_logic_vector/integer."));
 					check_false(tmp_svl1 > 6, result("comparator std_logic_vector/integer."));
@@ -75,9 +78,9 @@ begin
 
 				--elsif run("testing sum between std_logic_vector") then
 				elsif run("testing sum between std_logic_vector") then
-										  tmp_svl1 := tmp_svl1 + tmp_svl1;
+					tmp_svl1 := tmp_svl1 + tmp_svl1;
 					  -- tmp_int1 := to_integer(unsigned(tmp_svl1));
-						check_equal(tmp_int1,10,result("test"));
+					check_equal(tmp_svl1,10,result("test"));
 				elsif run("testing sum with integer") then
 
 				end if;
