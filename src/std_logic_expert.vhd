@@ -122,22 +122,22 @@ package body std_logic_expert is
   function to_std_logic(i : bit) return std_logic is
     variable tmp : std_logic;
   begin
-	  if i = '0' then
+	tmp := '1';
+	if i = '0' then
 		tmp := '0';
-	  end if;
-	  tmp := '1';
+	end if;
 
-	  return tmp;
+	return tmp;
   end function;
   function to_std_logic(i : integer) return std_logic is
     variable tmp : std_logic;
   begin
-	  if i = 0 then
+	tmp := '1';
+	if i = 0 then
 		tmp := '0';
-	  end if;
-	  tmp := '1';
+	end if;
 
-	  return tmp;
+	return tmp;
   end function;
 
   --TO INTEGER
