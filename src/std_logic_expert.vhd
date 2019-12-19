@@ -36,9 +36,8 @@ library IEEE;
 
 package std_logic_expert is
 
-    function to_std_logic(i : bit) return std_logic;
-	function to_std_logic(i : integer) return std_logic;
-
+	function to_std_logic(input : bit) return std_logic;
+	function to_std_logic(input : integer) return std_logic;
 	function to_integer         ( input : std_logic_vector    ) return integer;
 	function to_std_logic_vector( input : integer; size : integer) return std_logic_vector;
 
@@ -80,13 +79,13 @@ package std_logic_expert is
 
 	function "=" (l:std_logic_vector; r: integer)          return boolean;
 	function "=" (l:integer;          r: std_logic_vector) return boolean;
-	function "=" (l:std_logic_vector; r: unsigned)         return boolean;
-	function "=" (l:unsigned;         r: std_logic_vector) return boolean;
+	--function "=" (l:std_logic_vector; r: unsigned)         return boolean;
+	--function "=" (l:unsigned;         r: std_logic_vector) return boolean;
 
 	function "/=" (l:std_logic_vector; r: integer)          return boolean;
 	function "/=" (l:integer;          r: std_logic_vector) return boolean;
-	function "/=" (l:std_logic_vector; r: unsigned)         return boolean;
-	function "/=" (l:unsigned;         r: std_logic_vector) return boolean;
+	--function "/=" (l:std_logic_vector; r: unsigned)         return boolean;
+	--function "/=" (l:unsigned;         r: std_logic_vector) return boolean;
 
 	function ">" (l:std_logic_vector; r: integer)          return boolean;
 	function ">" (l:integer;          r: std_logic_vector) return boolean;
@@ -108,9 +107,7 @@ package std_logic_expert is
 	function "<=" (l:std_logic_vector; r: unsigned)         return boolean;
 	function "<=" (l:unsigned;         r: std_logic_vector) return boolean;
 
-	function "NOT" (i : integer) return integer;
-
-	--INTERNAL FUNCTIONS. NOT INTENDED TO BE USED DIRECTLY
+	function "NOT" (input : integer) return integer;
 
 end std_logic_expert;
 
@@ -119,21 +116,21 @@ package body std_logic_expert is
 
 	----------------------------------------------------------------------------------------------
   --TO STD_LOGIC
-  function to_std_logic(i : bit) return std_logic is
+  function to_std_logic(input : bit) return std_logic is
     variable tmp : std_logic;
   begin
 	tmp := '1';
-	if i = '0' then
+	if input = '0' then
 		tmp := '0';
 	end if;
 
 	return tmp;
   end function;
-  function to_std_logic(i : integer) return std_logic is
+  function to_std_logic(input : integer) return std_logic is
     variable tmp : std_logic;
   begin
 	tmp := '1';
-	if i = 0 then
+	if input = 0 then
 		tmp := '0';
 	end if;
 
@@ -457,25 +454,25 @@ package body std_logic_expert is
 	return tmp;
  end "=";
 
- function "=" (l:std_logic_vector; r: unsigned) return boolean is
-	 variable tmp : boolean;
- begin
-	tmp := false;
-	if unsigned(l) = r then
-	 tmp := true;
-	end if;
-	return tmp;
-end "=";
-
-function "=" (l:unsigned; r: std_logic_vector) return boolean is
-	 variable tmp : boolean;
- begin
- tmp := false;
- if unsigned(r) = l then
-	tmp := true;
- end if;
- return tmp;
-end "=";
+--  function "=" (l:std_logic_vector; r: unsigned) return boolean is
+-- 	 variable tmp : boolean;
+--  begin
+-- 	tmp := false;
+-- 	if unsigned(l) = r then
+-- 	 tmp := true;
+-- 	end if;
+-- 	return tmp;
+-- end "=";
+--
+-- function "=" (l:unsigned; r: std_logic_vector) return boolean is
+-- 	 variable tmp : boolean;
+--  begin
+--  tmp := false;
+--  if unsigned(r) = l then
+-- 	tmp := true;
+--  end if;
+--  return tmp;
+-- end "=";
 
 --------------------------------------------------------------------------------------------------------
 -- Operator: /=
@@ -500,25 +497,25 @@ end "=";
 	return tmp;
 end "/=";
 
- function "/=" (l:std_logic_vector; r: unsigned) return boolean is
-	 variable tmp : boolean;
- begin
-	tmp := false;
-	if unsigned(l) /= r then
-	 tmp := true;
-	end if;
-	return tmp;
-end "/=";
-
-function "/=" (l:unsigned; r: std_logic_vector) return boolean is
-	 variable tmp : boolean;
- begin
- tmp := false;
- if unsigned(r) /= l then
-	tmp := true;
- end if;
- return tmp;
-end "/=";
+--  function "/=" (l:std_logic_vector; r: unsigned) return boolean is
+-- 	 variable tmp : boolean;
+--  begin
+-- 	tmp := false;
+-- 	if unsigned(l) /= r then
+-- 	 tmp := true;
+-- 	end if;
+-- 	return tmp;
+-- end "/=";
+--
+-- function "/=" (l:unsigned; r: std_logic_vector) return boolean is
+-- 	 variable tmp : boolean;
+--  begin
+--  tmp := false;
+--  if unsigned(r) /= l then
+-- 	tmp := true;
+--  end if;
+--  return tmp;
+-- end "/=";
 
 --------------------------------------------------------------------------------------------------------
 -- Operator: >
@@ -691,11 +688,11 @@ begin
 	return tmp;
 end "<=";
 
-function "NOT" (i : integer) return integer is
+function "NOT" (input : integer) return integer is
 	variable tmp : integer;
 begin
 	tmp := 0;
-	if i = 0 then
+	if input = 0 then
 		tmp := 1;
 	end if;
 	
