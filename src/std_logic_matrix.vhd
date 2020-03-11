@@ -6,11 +6,11 @@ package std_logic_matrix_pkg is
 
     type std_logic_matrix is array (natural range <>, natural range <>) of std_logic;
 
-    procedure slm_row_from_slv(signal slm : out std_logic_matrix; constant row : natural; signal slv : in std_logic_vector);
-    procedure slm_row_from_slv_strb(signal slm : out std_logic_matrix; constant row : natural; signal slv : in std_logic_vector;
-                                    signal strb : in std_logic_vector);
-    procedure slv_from_slm_row(signal slv : out std_logic_vector; signal slm : in std_logic_matrix; constant row : natural);
-    procedure slv_from_slm_row_var(slv : out std_logic_vector; signal slm : in std_logic_matrix; constant row : natural);
+    procedure slm_row_from_slv(signal slm : out std_logic_matrix; constant row : natural; slv : in std_logic_vector);
+    procedure slm_row_from_slv_strb(signal slm : out std_logic_matrix; constant row : natural; slv : in std_logic_vector;
+                                    strb : in std_logic_vector);
+    procedure slv_from_slm_row(signal slv : out std_logic_vector; slm : in std_logic_matrix; constant row : natural);
+    procedure slv_from_slm_row_var(slv : out std_logic_vector; slm : in std_logic_matrix; constant row : natural);
 
 	--Operadores
     -- function "+"   (l:std_logic_matrix; r: std_logic_matrix) return std_logic_matrix;
@@ -42,14 +42,14 @@ end std_logic_matrix_pkg;
 --a arquitetura
 package body std_logic_matrix_pkg is
 
-    procedure slm_row_from_slv(signal slm : out std_logic_matrix; constant row : natural; signal slv : in std_logic_vector) is
+    procedure slm_row_from_slv(signal slm : out std_logic_matrix; constant row : natural; slv : in std_logic_vector) is
     begin
         for i in (slv'length-1) downto 0 loop
             slm(row, i) <= slv(i);
         end loop;
     end procedure;
-    procedure slm_row_from_slv_strb(signal slm : out std_logic_matrix; constant row : natural; signal slv : in std_logic_vector;
-                                    signal strb : in std_logic_vector) is
+    procedure slm_row_from_slv_strb(signal slm : out std_logic_matrix; constant row : natural; slv : in std_logic_vector;
+                                    strb : in std_logic_vector) is
     begin
         for s in 0 to (strb'length-1) loop
             if (strb(s) = '1') then
@@ -60,14 +60,14 @@ package body std_logic_matrix_pkg is
         end loop;
     end procedure;
 
-    procedure slv_from_slm_row(signal slv : out std_logic_vector; signal slm : in std_logic_matrix; constant row : natural) is
+    procedure slv_from_slm_row(signal slv : out std_logic_vector; slm : in std_logic_matrix; constant row : natural) is
     begin
         for i in slv'range loop
             slv(i) <= slm(row, i);
         end loop;
     end procedure;
     -- Same as slv_from_slm_row but the output is in a variable
-    procedure slv_from_slm_row_var(slv : out std_logic_vector; signal slm : in std_logic_matrix; constant row : natural) is
+    procedure slv_from_slm_row_var(slv : out std_logic_vector; slm : in std_logic_matrix; constant row : natural) is
     begin
         for i in slv'range loop
             slv(i) := slm(row, i);
