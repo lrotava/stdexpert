@@ -122,10 +122,10 @@ package std_logic_expert is
 	--Shift operators
 	--SLL and SLL are present on standard libraries.
 	--STD_LOGIC_EXPERT assumes STD_LOGIC as UNSIGNED, always. no need for SLA or SRA.
-	function "rll" (l:std_logic_vector; r: integer ) return std_logic_vector;
-	function "rll" (l:std_logic_vector; r: unsigned) return std_logic_vector;
-	function "rrl" (l:std_logic_vector; r: integer ) return std_logic_vector;
-	function "rrl" (l:std_logic_vector; r: unsigned) return std_logic_vector;
+	-- function "rll" (l:std_logic_vector; r: integer ) return std_logic_vector;
+	-- function "rll" (l:std_logic_vector; r: unsigned) return std_logic_vector;
+	-- function "rrl" (l:std_logic_vector; r: integer ) return std_logic_vector;
+	-- function "rrl" (l:std_logic_vector; r: unsigned) return std_logic_vector;
 
 	--index operations
 	function size_of    ( input : integer                          ) return integer;
@@ -137,13 +137,15 @@ package std_logic_expert is
 	function get_slice  (
 		input : std_logic_vector;
 		word  : integer;
-		index : integer
+		index : integer;
+		lsb_first : boolean
 	) return std_logic_vector;
 
 	function set_slice (
 		input  : std_logic_vector;
 		input2 : std_logic_vector;
-		index  : integer
+		index  : integer;
+		lsb_first : boolean
 	) return std_logic_vector;
 	
 	function to_range   (	input : std_logic_vector ) return range_t;
@@ -741,43 +743,43 @@ end "NOT";
 	--------------------------------------------------------------------------------------------------------
 	-- Operator: SLA / SRA
 	--------------------------------------------------------------------------------------------------------
-	function "rll" (l:std_logic_vector; r: integer) return std_logic_vector is
-		variable tmp : std_logic_vector(l'length-1 downto 0);
-	begin
-		tmp := l;
-		for k in 0 to r-1 loop
-			tmp := tmp(tmp'high-1 downto 0) & tmp(tmp'high);
-		end loop;
-		return tmp;
-	end "rll";
+	-- function "rll" (l:std_logic_vector; r: integer) return std_logic_vector is
+	-- 	variable tmp : std_logic_vector(l'length-1 downto 0);
+	-- begin
+	-- 	tmp := l;
+	-- 	for k in 0 to r-1 loop
+	-- 		tmp := tmp(tmp'high-1 downto 0) & tmp(tmp'high);
+	-- 	end loop;
+	-- 	return tmp;
+	-- end "rll";
 
-	function "rll" (l:std_logic_vector; r: unsigned) return std_logic_vector is
-		variable tmp1 : integer;
-		variable tmp2 : std_logic_vector(l'range);
-	begin
-		tmp1 := to_integer(r);
-		tmp2 := l sla tmp1;
-		return tmp2;
-	end "rll";
+	-- function "rll" (l:std_logic_vector; r: unsigned) return std_logic_vector is
+	-- 	variable tmp1 : integer;
+	-- 	variable tmp2 : std_logic_vector(l'range);
+	-- begin
+	-- 	tmp1 := to_integer(r);
+	-- 	tmp2 := l sla tmp1;
+	-- 	return tmp2;
+	-- end "rll";
 
-	function "rrl" (l:std_logic_vector; r: integer) return std_logic_vector is
-		variable tmp : std_logic_vector(l'length-1 downto 0);
-	begin
-		tmp := l;
-		for k in 0 to r-1 loop
-			tmp := tmp(tmp'low) & tmp(tmp'high downto 1);
-		end loop;
-		return tmp;
-	end "rrl";
+	-- function "rrl" (l:std_logic_vector; r: integer) return std_logic_vector is
+	-- 	variable tmp : std_logic_vector(l'length-1 downto 0);
+	-- begin
+	-- 	tmp := l;
+	-- 	for k in 0 to r-1 loop
+	-- 		tmp := tmp(tmp'low) & tmp(tmp'high downto 1);
+	-- 	end loop;
+	-- 	return tmp;
+	-- end "rrl";
 
-	function "rrl" (l:std_logic_vector; r: unsigned) return std_logic_vector is
-		variable tmp1 : integer;
-		variable tmp2 : std_logic_vector(l'range);
-	begin
-		tmp1 := to_integer(r);
-		tmp2 := l srl tmp1;
-		return tmp2;
-	end "rrl";
+	-- function "rrl" (l:std_logic_vector; r: unsigned) return std_logic_vector is
+	-- 	variable tmp1 : integer;
+	-- 	variable tmp2 : std_logic_vector(l'range);
+	-- begin
+	-- 	tmp1 := to_integer(r);
+	-- 	tmp2 := l srl tmp1;
+	-- 	return tmp2;
+	-- end "rrl";
 
 	--------------------------------------------------------------------------------------------------------
 	-- Operator: Index & Bus Operators
@@ -824,7 +826,7 @@ end "NOT";
 		return tmp;
 	end range_of;
 
-	function get_slice (input : std_logic_vector; word: integer; index: integer) return std_logic_vector is
+	function get_slice (input : std_logic_vector; word: integer; index: integer; lsb_first : boolean) return std_logic_vector is
 		variable range_v   : range_t;
 		variable input_tmp : std_logic_vector(input'length-1 downto 0);
 		variable tmp       : std_logic_vector(word-1 downto 0);
@@ -835,19 +837,27 @@ end "NOT";
 		assert input_tmp'length > range_v.high
 			report "Vector out of range. Will fill with 0."
 			severity warning;
+
+		if (lsb_first = false) then
+			tmp2 := word-1;
+		end if;
 		for j in range_v.high downto range_v.low loop
 			if j < input_tmp'length then
 				tmp(tmp2) := input_tmp(j);
 			else
 				tmp(tmp2) := '0';
 			end if;
-			tmp2 := tmp2+1;
+			if (lsb_first = false) then
+				tmp2 := tmp2-1;
+			else
+				tmp2 := tmp2+1;
+			end if;
 		end loop;
 
 		return tmp;
 	end get_slice;
 
-	function set_slice (input : std_logic_vector; input2: std_logic_vector; index: integer) return std_logic_vector is
+	function set_slice (input : std_logic_vector; input2: std_logic_vector; index: integer; lsb_first : boolean) return std_logic_vector is
 		variable range_v   : range_t;
 		variable input_tmp : std_logic_vector(input'length-1 downto 0);
 		variable tmp       : integer := 0;
@@ -859,11 +869,19 @@ end "NOT";
 			report "Vector out of range. Will discard excess bits."
 			severity warning;
 
+		if (lsb_first = false) then
+			tmp := input'length-1;
+		end if;
 		for j in range_v.high downto range_v.low loop
 			if j < input_tmp'length then
 				input_tmp(tmp) := input2(j);
 			end if;
-			tmp := tmp + 1;
+
+			if (lsb_first = false) then
+				tmp := tmp-1;
+			else
+				tmp := tmp + 1;
+			end if;
 		end loop;
 
 		return input_tmp;
