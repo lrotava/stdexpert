@@ -37,6 +37,8 @@ library IEEE;
 
 package std_logic_expert is
 
+	function to_std_logic(input : bit) return std_logic;
+	function to_std_logic(input : integer) return std_logic;
 	-- Outputs from the FIFO.
   type range_t is record
     high  : integer;
@@ -116,6 +118,7 @@ package std_logic_expert is
 	function "<=" (l:std_logic_vector; r: unsigned)         return boolean;
 	function "<=" (l:unsigned;         r: std_logic_vector) return boolean;
 
+	function "NOT" (input : integer) return integer;
 	function "sll" (l:std_logic_vector; r: integer) return std_logic_vector;
 	function "sll" (l:std_logic_vector; r: unsigned) return std_logic_vector;
 	function "srl" (l:std_logic_vector; r: integer) return std_logic_vector;
@@ -137,6 +140,28 @@ end std_logic_expert;
 package body std_logic_expert is
 
 	----------------------------------------------------------------------------------------------
+  --TO STD_LOGIC
+  function to_std_logic(input : bit) return std_logic is
+    variable tmp : std_logic;
+  begin
+	tmp := '1';
+	if input = '0' then
+		tmp := '0';
+	end if;
+
+	return tmp;
+  end function;
+  function to_std_logic(input : integer) return std_logic is
+    variable tmp : std_logic;
+  begin
+	tmp := '1';
+	if input = 0 then
+		tmp := '0';
+	end if;
+
+	return tmp;
+  end function;
+
   --TO INTEGER
   function to_integer( input : std_logic_vector) return integer is
     variable tmp : integer;
@@ -665,6 +690,16 @@ package body std_logic_expert is
 		return tmp;
 	end "<=";
 
+function "NOT" (input : integer) return integer is
+	variable tmp : integer;
+begin
+	tmp := 0;
+	if input = 0 then
+		tmp := 1;
+	end if;
+	
+	return tmp;
+end "NOT";
 	function "<=" (l:std_logic_vector; r: unsigned) return boolean is
 	 variable tmp : boolean;
 	begin
