@@ -565,7 +565,7 @@ package body std_logic_galois is
 
 
   function "sll"  (l:galois_polynome; r: integer) return galois_polynome is
-		variable tmp : galois_polynome;
+		variable tmp : galois_polynome( l'high downto 0);
 	begin
 		if (r > 0) and (l'length > 1) then
 			tmp(l'high downto r) := tmp(l'high-r downto 0);
