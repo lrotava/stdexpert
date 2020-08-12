@@ -870,15 +870,15 @@ end "NOT";
 			severity warning;
 
 		if (lsb_first = false) then
-			tmp := input'length-1;
+			tmp := input2'length-1;
 		end if;
 		for j in range_v.high downto range_v.low loop
 			if j < input_tmp'length then
-				input_tmp(tmp) := input2(j);
+				input_tmp(j) := input2(tmp);
 			end if;
 
 			if (lsb_first = false) then
-				tmp := tmp-1;
+				tmp := tmp - 1;
 			else
 				tmp := tmp + 1;
 			end if;
